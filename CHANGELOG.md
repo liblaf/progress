@@ -6,3 +6,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Conventional Changelog](https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [v0.1.0](https://github.com/liblaf/progress/releases/tag/v0.1.0) - 2026-09-03
+
+### 💥 BREAKING CHANGES
+
+- remove trange(); use track(range(...)) instead. - [3557dc2](https://github.com/liblaf/progress/commit/3557dc26c6a6f9c4461b1d6f058bc4be73673c90) by [@liblaf](https://github.com/liblaf)
+
+### ✨ Features
+
+- add liblaf.progress - [2b52a57](https://github.com/liblaf/progress/commit/2b52a57fa36c5d3dd99be877693e60e28cc1d3d2) by [@liblaf](https://github.com/liblaf)
+
+### 🐛 Bug Fixes
+
+- **(progress)** emit task lifecycle state changes - [b8f56f4](https://github.com/liblaf/progress/commit/b8f56f4ef7092db15447a63581ebf01b8d4ef964) by [@liblaf](https://github.com/liblaf)
+
+### ♻️ Code Refactoring
+
+- **\[breaking\]** remove trange compatibility alias - [3557dc2](https://github.com/liblaf/progress/commit/3557dc26c6a6f9c4461b1d6f058bc4be73673c90) by [@liblaf](https://github.com/liblaf)
+
+### ⚙️ Continuous Integrations
+
+- skip absent benchmark suite - [ff9d23e](https://github.com/liblaf/progress/commit/ff9d23eb3cf49e61ca290d08a57feebe01f0e388) by [@liblaf](https://github.com/liblaf)
+
+### ❤️ Contributors
+
+- [@liblaf](https://github.com/liblaf) made their first contribution
