@@ -2,9 +2,11 @@ import logging
 
 import pytest
 from rich.console import Console
+from rich.progress import TaskID
 
 from liblaf.progress import (
     Progress,
+    ProgressEvent,
     format_event,
     get_progress,
     render_event,
@@ -72,6 +74,70 @@ def test_remove_task_emits_one_final_snapshot() -> None:
 
     assert [event.final for event in events] == [False, True]
     assert events[-1].tasks[0].description == "removed"
+
+
+def test_invalid_remove_does_not_emit_a_final_snapshot() -> None:
+    events = []
+    progress = Progress(emitter=events.append, min_interval=0)
+    progress.add_task("retained", total=1)
+    previous_event = events[-1]
+
+    with pytest.raises(KeyError):
+        progress.remove_task(TaskID(999))
+
+    assert events == [previous_event]
+
+
+def test_reset_emits_the_reset_state() -> None:
+    events = []
+    progress = Progress(emitter=events.append, min_interval=0)
+    task = progress.add_task("reset", total=2)
+
+    progress.reset(task, completed=1)
+
+    assert len(events) == 2
+    assert events[-1].tasks[0].completed == 1
+
+
+def test_start_task_emits_the_started_state() -> None:
+    events = []
+    progress = Progress(emitter=events.append, min_interval=0)
+    task = progress.add_task("start", start=False)
+
+    progress.start_task(task)
+
+    assert len(events) == 2
+    assert events[0].tasks[0].elapsed is None
+    assert events[-1].tasks[0].elapsed is not None
+
+
+def test_start_task_does_not_emit_when_already_started() -> None:
+    events = []
+    progress = Progress(emitter=events.append, min_interval=0)
+    task = progress.add_task("started")
+    previous_event = events[-1]
+
+    progress.start_task(task)
+
+    assert events == [previous_event]
+
+
+def test_reentrant_start_task_emits_from_an_add_callback() -> None:
+    events: list[ProgressEvent] = []
+    progress = Progress(emitter=None, min_interval=0)
+    waiting = progress.add_task("waiting", start=False)
+
+    def emit(event: ProgressEvent) -> None:
+        events.append(event)
+        if len(events) == 1:
+            progress.start_task(waiting)
+
+    progress.emitter = emit
+    progress.add_task("trigger")
+
+    assert len(events) == 2
+    assert events[0].tasks[0].elapsed is None
+    assert events[-1].tasks[0].elapsed is not None
 
 
 def test_default_emitter_uses_standard_logging(

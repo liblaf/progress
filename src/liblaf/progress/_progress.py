@@ -144,6 +144,10 @@ class Progress(RichProgress):
         self._stale = True
         self._last_was_final = False
 
+    def _require_task(self, task_id: TaskID) -> None:
+        if task_id not in self.task_ids:
+            raise KeyError(task_id)
+
     def _snapshot(self, *, final: bool) -> ProgressEvent:
         tasks = tuple(
             TaskSnapshot(
@@ -172,7 +176,9 @@ class Progress(RichProgress):
         visible: bool = True,
         **fields: Any,
     ) -> TaskID:
-        task_id = super().add_task(
+        if not start:
+            self._mark_stale()
+        return super().add_task(
             description,
             start=start,
             total=total,
@@ -180,13 +186,11 @@ class Progress(RichProgress):
             visible=visible,
             **fields,
         )
-        self._mark_stale()
-        self.refresh()
-        return task_id
 
     @override
     def remove_task(self, task_id: TaskID) -> None:
         """Emit a final snapshot before removing a task from this progress owner."""
+        self._require_task(task_id)
         if not self._last_was_final:
             self._mark_stale()
             self.refresh(force=True)
@@ -236,6 +240,8 @@ class Progress(RichProgress):
         description: str | None = None,
         **fields: Any,
     ) -> None:
+        self._require_task(task_id)
+        self._mark_stale()
         super().reset(
             task_id,
             start=start,
@@ -245,7 +251,19 @@ class Progress(RichProgress):
             description=description,
             **fields,
         )
+
+    @override
+    def start_task(self, task_id: TaskID) -> None:
+        with self._lock:
+            if self._tasks[task_id].start_time is not None:
+                return
+            super().start_task(task_id)
         self._mark_stale()
+        # Rich calls this method from add_task before advancing _task_index, then
+        # refreshes after the new task has been installed. Other calls should
+        # publish their state immediately instead of sharing that deferred refresh.
+        if task_id != self._task_index:
+            self.refresh()
 
     @override
     def stop_task(self, task_id: TaskID) -> None:
