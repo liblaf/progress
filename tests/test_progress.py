@@ -9,7 +9,6 @@ from liblaf.progress import (
     get_progress,
     render_event,
     track,
-    trange,
 )
 
 
@@ -109,10 +108,10 @@ def test_disabled_progress_emits_nothing() -> None:
     assert events == []
 
 
-def test_trange() -> None:
+def test_track_range() -> None:
     events = []
 
-    assert list(trange(3, emitter=events.append, min_interval=100)) == [0, 1, 2]
+    assert list(track(range(3), emitter=events.append, min_interval=100)) == [0, 1, 2]
     assert events[-1].tasks[0].finished
 
 

@@ -2,6 +2,8 @@
 
 - Status: accepted
 - Date: 2026-08-31
+- Helper interface: superseded by
+  [ADR 0004](0004-prefer-explicit-range-tracking.md)
 
 ## Context
 

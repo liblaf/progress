@@ -8,8 +8,9 @@
 
 </div>
 
-`liblaf.progress` tracks Rich-compatible tasks and emits immutable, rate-limited
-snapshots through Python logging. It does not own a live terminal display, so
+`liblaf.progress` builds on Rich task accounting and emits immutable,
+rate-limited snapshots through Python logging. It deliberately changes Rich's
+lifecycle and output semantics: it does not own a live terminal display, so
 the same progress state works in CI, services, notebooks, and terminal tools.
 
 ## Installation

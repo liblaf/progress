@@ -70,10 +70,12 @@ _DEFAULT_EMITTER: Final = _DefaultEmitter()
 
 
 class Progress(RichProgress):
-    """Own Rich-compatible task accounting and emit log-oriented snapshots.
+    """Own Rich task accounting and emit log-oriented snapshots.
 
-    Unlike Rich's `Progress`, this class does not start a live terminal display. Mutable Rich tasks become immutable
-    events sent to `emitter` at the owner's rate limit.
+    The class inherits Rich's task operations while deliberately changing
+    lifecycle and output semantics: it never starts a live terminal display,
+    and mutable Rich tasks become immutable events sent to `emitter` at the
+    owner's rate limit.
 
     Args:
         *columns: Optional Rich columns for rendering integrations.
@@ -350,19 +352,6 @@ def track[T](
             completed=completed,
             description=description,
         )
-
-
-def trange(*args: int, **kwargs: Any) -> Iterator[int]:
-    """Yield a `range` while reporting progress.
-
-    `args` have the same meaning as `range`; keyword arguments are forwarded to
-    [`track`][liblaf.progress.track].
-
-    Examples:
-        >>> list(trange(3, emitter=None))
-        [0, 1, 2]
-    """
-    return track(range(*args), total=len(range(*args)), **kwargs)
 
 
 @cache

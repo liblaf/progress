@@ -23,7 +23,7 @@ Only a task created by `track()` is stopped and removed automatically.
 
 ## No terminal lifecycle
 
-The class is compatible with Rich's task API, but `start()` does not create a
-live display and `stop()` does not tear one down. Rendering is an adapter
-decision: use `format_event()` for text or `render_event()` for a Rich
-renderable.
+The class inherits Rich's task operations while deliberately changing their
+lifecycle and output semantics: `start()` does not create a live display and
+`stop()` does not tear one down. Rendering is an adapter decision: use
+`format_event()` for text or `render_event()` for a Rich renderable.

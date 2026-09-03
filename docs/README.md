@@ -1,8 +1,8 @@
 # Progress
 
-`liblaf.progress` turns Rich-compatible task accounting into immutable,
+`liblaf.progress` builds on Rich task accounting, turning it into immutable,
 rate-limited events for logging and other application-owned destinations. It
-does not create a live terminal display.
+deliberately does not create a live terminal display.
 
 Start with the [logging guide](guides/logging.md) for standard logging and
 custom emitters, then read the [event model](concepts/events.md) for ownership,

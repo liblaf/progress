@@ -8,7 +8,6 @@ from ._progress import (
     TaskSnapshot,
     get_progress,
     track,
-    trange,
 )
 from ._render import SpeedColumn, format_event, render_event
 from ._version import __commit_id__, __version__, __version_tuple__
@@ -28,5 +27,4 @@ __all__ = [
     "log_to",
     "render_event",
     "track",
-    "trange",
 ]
